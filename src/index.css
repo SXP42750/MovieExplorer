@@ -1,13 +1,162 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* index.css (global) */
+
+/* Light theme variables (default) */
+:root {
+  --bg: #ffffff;
+  --text: #111827;
+  --nav-bg: #f8fafc;
+  --card-bg: #ffffff;
+  --muted: #6b7280;
+  --primary: #2563eb;
+  --button-bg: var(--primary);
+  --button-text: #fff;
+  --shadow: 0 2px 8px rgba(16,24,40,0.06);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Dark theme overrides — applied when <html> has class "dark" */
+html.dark {
+  --bg: #0b1220;
+  --text: #e6eef8;
+  --nav-bg: #0f1724;
+  --card-bg: #0b1220;
+  --muted: #94a3b8;
+  --primary: #3b82f6;
+  --button-bg: var(--primary);
+  --button-text: #fff;
+  --shadow: 0 6px 18px rgba(2,6,23,0.6);
+}
+
+/* Apply to page */
+html, body, #root {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  transition: background-color .2s ease, color .2s ease;
+}
+
+/* Simple utility classes */
+.navbar {
+  background: var(--nav-bg);
+  color: var(--text);
+  padding: 12px 20px;
+  box-shadow: var(--shadow);
+}
+
+.container {
+  padding: 16px;
+}
+
+/* Movie card example */
+.card {
+  background: var(--card-bg);
+  color: var(--text);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+/* Buttons */
+.btn {
+  background: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.btn.ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+/* small, muted text */
+.muted { color: var(--muted); }
+
+/* accessibility focus */
+.btn:focus { outline: 2px solid rgba(100,150,250,0.6); }
+
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+  grid-auto-rows: 1fr;
+}
+
+.movie-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+  color: var(--text);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  height: 100%;
+  transition: transform 0.3s ease , box-shadow 0.3s ease;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.movie-card__image {
+  width: 100%;
+  aspect-ratio: 2 / 3; /* consistent poster size */
+  background: #eee;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.movie-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform :scale(1.05)
+}
+.movie-card__noimg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #555;
+}
+.movie-card__content {
+  padding: 10px;
+  flex: 1 1 auto;
+}
+.movie-card__title {
+  font-size: 16px;
+  margin: 0 0 6px;
+  font-weight: bold;
+}
+.movie-card__meta {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.movie-card__footer {
+  padding: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.btn--primary {
+  background: #28a745;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.btn--primary:hover {
+  background: #218838;
 }
