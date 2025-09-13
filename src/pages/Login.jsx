@@ -9,20 +9,18 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  // 🔹 Redirect after login state changes
   useEffect(() => {
-    if (!loading && user) {
+    if (!loading && user) {  
       if (isAdmin) navigate("/admin");
       else navigate("/");
     }
-  }, [user, isAdmin, loading, navigate]); // when the user or loading state changes the useeffect will run
+  }, [user, isAdmin, loading, navigate]); 
 
   
   const handleUserGoogleLogin = async () => {
     try {
-      await loginWithGoogle(); // waits until the login is complete
+      await loginWithGoogle(); 
     } catch (err) {
-      console.error("User Google login error:", err); // log the error for debugging
       alert(err.message || "Login failed");
     }
   };
@@ -32,12 +30,11 @@ export default function Login() {
     try {
       await loginWithEmail(email, password);
     } catch (err) {
-      console.error("Email login error:", err);
       alert(err.message);
     }
   };
 
-  if (loading) return <div>Loading...</div>; // 🔹 wait until auth loads
+  if (loading) return <div>Loading...</div>; 
 
   return (
     <div style={{ padding: 20, maxWidth: 420, margin: "0 auto" }}>

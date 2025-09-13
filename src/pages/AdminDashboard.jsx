@@ -1,15 +1,10 @@
-
-// pages/AdminDashboard.jsx
-// src/pages/AdminDashboard.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { getFirestore, collection, query, orderBy, onSnapshot } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext";
-import "../AdminDashboard.css"; // optional CSS file for styling
-
+import "../AdminDashboard.css"; 
 const db = getFirestore();
 
 function formatMaybeTimestamp(value) {
-  // Firestore Timestamp has toDate(), otherwise handle strings/numbers
   if (!value) return "-";
   if (typeof value === "object" && typeof value.toDate === "function") {
     return value.toDate().toLocaleString();
@@ -33,7 +28,7 @@ export default function AdminDashboard() {
   const [expandedId, setExpandedId] = useState(null);
 
   useEffect(() => {
-    if (!isAdmin) return; // only subscribe if admin (avoids unnecessary reads)
+    if (!isAdmin) return; 
     setLoading(true);
 
     const q = query(collection(db, "bookings"), orderBy("createdAt", "desc"));
@@ -53,7 +48,7 @@ export default function AdminDashboard() {
     return () => unsub();
   }, [isAdmin]);
 
-  // normalize a booking object to readable fields (fallbacks)
+  
   const normalize = (b) => {
     const movieTitle = b.movieTitle || b.movie || b.showName || "-";
     const userName = b.userName || b.user || b.customerName || b.name || "";
@@ -61,7 +56,7 @@ export default function AdminDashboard() {
     const phone = b.phone || b.mobile || b.contact || "";
     const tickets = Array.isArray(b.tickets) ? b.tickets.length : (b.numTickets || b.tickets || 0);
     const status = b.status || b.confirmed ? "Confirmed" : (b.status || "N/A");
-    // date: prefer createdAt timestamp, fallback on bookingTime/showDate fields
+    
     const dateTime =
       b.createdAt || b.bookingTime || (b.showDate ? `${b.showDate} ${b.showTime || b.time || ""}` : null);
     const totalAmount = Number(b.totalAmount ?? b.amount ?? b.price ?? 0);
@@ -83,7 +78,7 @@ export default function AdminDashboard() {
 
   const normalizedBookings = useMemo(() => bookings.map(normalize), [bookings]);
 
-  // search across multiple fields
+  
   const filtered = useMemo(() => {
     if (!search.trim()) return normalizedBookings;
     const q = search.trim().toLowerCase();
@@ -100,8 +95,8 @@ export default function AdminDashboard() {
 
   const totalRevenue = normalizedBookings.reduce((s, b) => s + (Number(b.totalAmount) || 0), 0);
 
-  if (!user) return <p style={{ padding: 20 }}>🔒 Please log in to view this page.</p>;
-  if (!isAdmin) return <p style={{ padding: 20 }}>❌ Access Denied. Admins only.</p>;
+  if (!user) return <p style={{ padding: 20 }}>Please log in to view this page.</p>;
+  if (!isAdmin) return <p style={{ padding: 20 }}>Access Denied. Admins only.</p>;
 
 
   return (

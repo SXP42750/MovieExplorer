@@ -1,33 +1,30 @@
-// src/components/MovieList.jsx
-
 import React, { useEffect, useState } from "react";
 import { getMovies, getGenres, LANGUAGES } from "../api/tmdb";
 import MovieCard from "./MovieCard";
 
 export default function MovieList() {
-  const [movies, setMovies] = useState([]); //array of movies object to dispaly
-  const [genres, setGenres] = useState([]); //list of genres object for the genre dropdown
-  const [query, setQuery] = useState(""); // search text input
-  //current filters state
+  const [movies, setMovies] = useState([]); 
+  const [genres, setGenres] = useState([]); 
+  const [query, setQuery] = useState(""); 
+ 
   const [genreId, setGenreId] = useState(""); 
   const [language, setLanguage] = useState("");
   const [minRating, setMinRating] = useState("");
-  //pagination current page and total pages
+
   const [page, setPage] = useState(1); 
-  const [totalPages, setTotalPages] = useState(1); // total pages from API
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch genres on mount
+ 
   useEffect(() => {
     getGenres().then(setGenres).catch(console.error);
-  }, []); // we use empty dependency array to run this effect only once on mount
+  }, []); //runs this effect only once 
 
-  // Fetch movies whenever filters change
   useEffect(() => {
-    let cancelled = false;
+    let cancelled = false; // avoid state update after unmount
     async function fetchData() {
-      setLoading(true); // sets loading and clear error
+      setLoading(true);
       setError(null);
       try {
         const data = await getMovies({
@@ -38,7 +35,7 @@ export default function MovieList() {
           minRating,
         });
         if (!cancelled) { 
-          setMovies(data.results || []); //
+          setMovies(data.results || []); 
           setTotalPages(data.total_pages || 1);
         }
       } catch (err) {
@@ -48,7 +45,7 @@ export default function MovieList() {
       }
     }
     fetchData();
-    return () => { // cleanup function to avoid updating state on unmounted component
+    return () => { 
       cancelled = true;
     };
   }, [query, page, genreId, language, minRating]);
@@ -62,7 +59,7 @@ export default function MovieList() {
           placeholder="Search movies..."
           value={query}
           onChange={(e) => {
-            setQuery(e.target.value); // update search text
+            setQuery(e.target.value); 
             setPage(1); // reset to first page on new search
           }}
           style={{ padding: 8 }}
@@ -111,7 +108,7 @@ export default function MovieList() {
       </div>
 
 
-      {/* Pagination */}
+      {/* Pagination control */}
       <div style={{ marginTop: 16 }}>
         <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}>
           Prev

@@ -3,21 +3,21 @@ import { collection, addDoc, getDocs, serverTimestamp } from "firebase/firestore
 
 const BOOKINGS_COLLECTION = "bookings";
 
-// Save a booking
+
 export const saveBooking = async (bookingData) => {
   try {
-    const user = auth.currentUser; // Get the currently logged-in user
+    const user = auth.currentUser; 
     if (!user) throw new Error("You must be logged in to book.");
 
-     console.log("📌 Saving booking for:", user.displayName, user.email); 
-    console.log("📌 Booking data:", bookingData);
+     console.log("Saving booking for:", user.displayName, user.email); 
+    console.log("Booking data:", bookingData);
 
     const docRef = await addDoc(collection(db, BOOKINGS_COLLECTION), {
-      ...bookingData, // spread operator into the document
-      userName: user.displayName || "Guest" ,   // ✅ Save Google name
-      userEmail: user.email || "",        // ✅ Save email too
-      createdAt: serverTimestamp(),  // server generated timestamp
-      bookingTime : Date.now()            // ✅ Firestore timestamp for sorting
+      ...bookingData, 
+      userName: user.displayName || "Guest" ,  
+      userEmail: user.email || "",       
+      createdAt: serverTimestamp(),  
+      bookingTime : Date.now() 
     });
     console.log("Booking saved with ID: ", docRef.id);
     return docRef.id;
@@ -26,7 +26,7 @@ export const saveBooking = async (bookingData) => {
   }
 };
 
-// Get all bookings
+
 export const getBookings = async () => {
   try {
     const querySnapshot = await getDocs(collection(db, BOOKINGS_COLLECTION));

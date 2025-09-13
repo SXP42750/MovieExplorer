@@ -5,32 +5,30 @@ import Home from "./pages/Home";
 import AdminDashboard from "./pages/AdminDashboard";
 import { ThemeProvider } from "./context/ThemeContext";
 import Login from "./pages/Login";
-import PrivateAdminRoute from "./routes/PrivateAdminRoute"; //admin only route protection
-import { useAuth } from "./context/AuthContext"; // import auth
-import "./index.css";
+import PrivateAdminRoute from "./routes/PrivateAdminRoute";
+import { useAuth } from "./context/AuthContext";
 
 export default function App() {
   const { isAdmin, loading } = useAuth();
 
-  if (loading) return <p>Loading...</p>; // wait until Firebase resolves
+  if (loading) return <p>Loading...</p>;
 
   return (
     <ThemeProvider>
       <Router>
         <Navbar />
         <Routes>
-          {/* Root route behaves differently for Admin vs User */}
           <Route
             path="/"
-            element={isAdmin ? <AdminDashboard /> : <Home />}  // root route for admin and user
+            element={isAdmin ? <AdminDashboard /> : <Home />}
           />
 
-          {/* Login page */}
+
           <Route path="/login" element={<Login />} />
 
-          {/* Admin protected route */}
+
           <Route
-            path="/admin" // show admin dashboard only if admin is true
+            path="/admin"
             element={
 
               <PrivateAdminRoute>
@@ -39,7 +37,6 @@ export default function App() {
             }
           />
 
-          {/* Fallback: if route not found */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>

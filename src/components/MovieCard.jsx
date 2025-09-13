@@ -1,12 +1,10 @@
-
-// src/components/MovieCard.jsx
 import React, { useState } from "react";
 import { getImageUrl } from "../api/tmdb";
 import BookingModal from "./BookingModal";
 
-function MovieCard({ movie }) {
-  const [isModalOpen, setIsModalOpen] = useState(false); // keep track of whether the modal is open or closed
-  const poster = getImageUrl(movie.poster_path, "w342"); //to build the full URL for the movie poster image
+function MovieCard({ movie }) { 
+  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const poster = getImageUrl(movie.poster_path, "w342"); 
 
   return (
     <>

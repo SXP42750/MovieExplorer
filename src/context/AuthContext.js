@@ -7,38 +7,38 @@ import {
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
-import { app } from "../auth/firebase"; // your firebase config
+import { app } from "../auth/firebase"; 
 
-const ADMIN_EMAIL = "sp1707702@gmail.com"; // your admin email here
+const ADMIN_EMAIL = "sp1707702@gmail.com"; 
 
-const auth = getAuth(app);
+const auth = getAuth(app); 
 
 const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext); 
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true); 
 
-  // 🔹 Login with Google (for normal users)
+
   const loginWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     await signInWithPopup(auth, provider);
   };
 
-  // 🔹 Login with Email/Password (Admin or normal user)
+
   const loginWithEmail = async (email, password) => {
     await signInWithEmailAndPassword(auth, email, password);
   };
 
-  // 🔹 Logout
   const logout = async () => {
-    await signOut(auth);
+    await signOut(auth); 
   };
 
-  // 🔹 Listen to Firebase Auth state changes
+ 
+  // listen to firebase auth state changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);

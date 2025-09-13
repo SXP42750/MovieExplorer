@@ -1,4 +1,3 @@
-// export default Navbar;
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, signOut } from "firebase/auth";
@@ -6,7 +5,7 @@ import { useTheme } from "../context/ThemeContext";
 
 const Navbar = () => {
   const { user, isAdmin } = useAuth();
-  const { theme, toggleTheme } = useTheme(); //control dark and light button
+  const { theme, toggleTheme } = useTheme(); 
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
 
@@ -14,7 +13,7 @@ const Navbar = () => {
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
 
-  // User login with Google  
+
   const handleLogin = async () => {
     try {
       await signInWithPopup(auth, provider);
@@ -24,7 +23,7 @@ const Navbar = () => {
     }
   };
 
-  // Admin login with email & password
+
   const handleAdminLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
@@ -36,7 +35,7 @@ const Navbar = () => {
     }
   };
 
-  // Logout
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -46,7 +45,7 @@ const Navbar = () => {
     }
   };
 
-  return ( // navigation bar 
+  return (
     <nav style={styles.nav}> 
       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
   <img 
@@ -58,7 +57,7 @@ const Navbar = () => {
 </div>
 
       <div style={styles.rightSection}>
-        {/* Theme Toggle Button */}
+      
         <button style={styles.themeButton} onClick={toggleTheme}>
           {theme === "light" ? "🌙 Dark" : "☀️ Light"}
         </button>

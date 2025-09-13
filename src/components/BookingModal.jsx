@@ -1,27 +1,24 @@
-// src/components/BookingModal.jsx
 import { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { saveBooking } from "../services/bookingService";
 import { useAuth } from "../context/AuthContext";
 
-export default function BookingModal({ movie, isOpen, onClose }) { // here we are receiving the movie prop
-  const { user } = useAuth(); // who is currently logged in
-  const [tickets, setTickets] = useState(1); // intial ticket to 1
+export default function BookingModal({ movie, isOpen, onClose }) {
+  const { user } = useAuth(); 
+  const [tickets, setTickets] = useState(1); 
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const ref = useRef(null);
 
-  // handle Escape key and page scroll lock
-
   useEffect(() => {
     if (!isOpen) return;
-    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    const onKey = (e) => { if (e.key === "Escape") onClose(); }; //when escape the modal closes
     document.addEventListener("keydown", onKey);
     const original = document.body.style.overflow;
-    document.body.style.overflow = "hidden"; // to disable background scroll
-    return () => {  // modal unmounts 
-      document.removeEventListener("keydown", onKey); //remove listner 
-      document.body.style.overflow = original; //restore orginal overflow
+    document.body.style.overflow = "hidden"; 
+    return () => {  
+      document.removeEventListener("keydown", onKey); 
+      document.body.style.overflow = original; 
     };
   }, [isOpen, onClose]);
 
@@ -43,8 +40,8 @@ export default function BookingModal({ movie, isOpen, onClose }) { // here we ar
       user: user.displayName || user.email,
       userEmail: user.email,
       status: "Confirmed",
-      totalAmount: tickets * 20, // assuming $20 per ticket
-      createdAt: new Date().toISOString(), //timestamp string
+      totalAmount: tickets * 20, 
+      createdAt: new Date().toISOString(), 
     };
 
     try {
@@ -81,7 +78,6 @@ const boxStyle = {
   position: "relative",
 };
 
-// uses createPortal , so that the modal appears over the whole page
 
   return ReactDOM.createPortal(
     <div id="booking-modal-overlay" style={overlayStyle} onMouseDown={onClose}>
