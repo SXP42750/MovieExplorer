@@ -20,7 +20,11 @@ export default function App() {
         <Routes>
           <Route
             path="/"
-            element={isAdmin ? <AdminDashboard /> : <Home />}
+            element={
+             <div style={{ paddingTop: "40px" }}>
+            {isAdmin ? <AdminDashboard /> : <Home />}
+            </div>
+            }
           />
 
 
@@ -30,10 +34,11 @@ export default function App() {
           <Route
             path="/admin"
             element={
-
+               <div style={{ paddingTop: "50px" }}>
               <PrivateAdminRoute>
                 <AdminDashboard />
               </PrivateAdminRoute>
+              </div>
             }
           />
 

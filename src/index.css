@@ -1,19 +1,17 @@
-/* index.css (global) */
-
-/* Light theme variables (default) */
 :root {
   --bg: #ffffff;
   --text: #111827;
-  --nav-bg: #f8fafc;
   --card-bg: #ffffff;
+  --input-bg: #ffffff;
+  --input-text: #111827;
+  --input-border: #d1d5db;
+  --btn-bg: #4784ff;
+  --btn-text: #ffffff;
+  --btn-border: #d1d5db;
   --muted: #6b7280;
-  --primary: #2563eb;
-  --button-bg: var(--primary);
-  --button-text: #fff;
-  --shadow: 0 2px 8px rgba(16,24,40,0.06);
 }
 
-/* Dark theme overrides — applied when <html> has class "dark" */
+
 html.dark {
   --bg: #0b1220;
   --text: #e6eef8;
@@ -21,15 +19,21 @@ html.dark {
   --card-bg: #0b1220;
   --muted: #94a3b8;
   --primary: #3b82f6;
-  --button-bg: var(--primary);
+  --button-bg: #3b82f6;
   --button-text: #fff;
-  --shadow: 0 6px 18px rgba(2,6,23,0.6);
+  --btn-border: #fff;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Apply to page */
-html, body, #root {
+
+html,
+body,
+#root {
   height: 100%;
 }
+
+
+
 body {
   margin: 0;
   background: var(--bg);
@@ -38,7 +42,6 @@ body {
   transition: background-color .2s ease, color .2s ease;
 }
 
-/* Simple utility classes */
 .navbar {
   background: var(--nav-bg);
   color: var(--text);
@@ -50,7 +53,7 @@ body {
   padding: 16px;
 }
 
-/* Movie card example */
+
 .card {
   background: var(--card-bg);
   color: var(--text);
@@ -59,34 +62,43 @@ body {
   box-shadow: var(--shadow);
 }
 
-/* Buttons */
+
 .btn {
-  background: var(--button-bg);
-  color: var(--button-text);
-  border: none;
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  border: 1px solid var(--btn-border);
   padding: 8px 12px;
   border-radius: 6px;
   cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
 }
+
 .btn.ghost {
   background: transparent;
   color: var(--text);
-  border: 1px solid rgba(0,0,0,0.08);
+  border: 1px solid var(--btn-border); /* use variable */
+  transition: background 0.2s ease, color 0.2s ease, border 0.2s ease;
 }
 
-/* small, muted text */
-.muted { color: var(--muted); }
 
-/* accessibility focus */
-.btn:focus { outline: 2px solid rgba(100,150,250,0.6); }
+
+.muted {
+  color: var(--muted);
+}
+
+
+.btn:focus {
+  outline: 2px solid rgba(100, 150, 250, 0.6);
+}
 
 
 .movie-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 18px;
-  grid-auto-rows: 1fr;
 }
+
+
 
 .movie-card {
   display: flex;
@@ -97,7 +109,7 @@ body {
   box-shadow: var(--shadow);
   overflow: hidden;
   height: 100%;
-  transition: transform 0.3s ease , box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .movie-card:hover {
@@ -107,7 +119,7 @@ body {
 
 .movie-card__image {
   width: 100%;
-  aspect-ratio: 2 / 3; /* consistent poster size */
+  aspect-ratio: 2 / 3;
   background: #eee;
   overflow: hidden;
   transition: transform 0.3s ease;
@@ -117,8 +129,9 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform :scale(1.05)
+  transform: scale(1.05)
 }
+
 .movie-card__noimg {
   display: flex;
   align-items: center;
@@ -126,15 +139,18 @@ body {
   height: 100%;
   color: #555;
 }
+
 .movie-card__content {
   padding: 10px;
   flex: 1 1 auto;
 }
+
 .movie-card__title {
   font-size: 16px;
   margin: 0 0 6px;
   font-weight: bold;
 }
+
 .movie-card__meta {
   font-size: 14px;
   color: var(--muted);
@@ -147,16 +163,27 @@ body {
 }
 
 .btn--primary {
-  background: #28a745;
-  color: #fff;
+  background: var(--btn-bg);
+  color: var(--btn-text);
   font-size: 14px;
   font-weight: 500;
   border: none;
   border-radius: 6px;
   padding: 8px 12px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: filter 0.3s ease;
 }
+
 .btn--primary:hover {
-  background: #218838;
+  filter: brightness(0.9);
+}
+
+.star-icon {
+  color: #ffc107;
+}
+
+.rating-number {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text);
 }

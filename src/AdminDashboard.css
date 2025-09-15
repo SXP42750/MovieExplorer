@@ -51,7 +51,7 @@
   background: #e84118;
 }
 
-/* Table Styling */
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;
@@ -100,4 +100,72 @@
 .total-amount {
   color: #1dd1a1;
   font-weight: 600;
+}
+
+.expanded-row .expanded-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  padding: 12px;
+  align-items: start;
+}
+
+.expanded-item strong {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.btn-small {
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.copy-message {
+  margin-top: 8px;
+  font-size: 13px;
+  color: green;
+}
+
+
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.pagination-bar button {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  color: #333;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.pagination-bar button:hover:not(:disabled) {
+  background: #e6e6e6;
+}
+
+.pagination-bar button[aria-current="page"] {
+  background: #333;
+  color: #fff;
+  font-weight: bold;
+  border-color: #333;
+}
+
+.pagination-bar button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-bar select {
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
 }

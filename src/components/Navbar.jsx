@@ -47,11 +47,11 @@ const Navbar = () => {
 
   return (
     <nav style={styles.nav}> 
-      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
   <img 
     src="/logo.jpg" 
     alt="Movie Explorer Logo" 
-    style={{ height: "40px", objectFit: "contain" }} 
+    style={{ height: "35px", objectFit: "contain" }} 
   />
   <h1 style={styles.logo}>Movie Explorer</h1>
 </div>
@@ -83,7 +83,6 @@ const Navbar = () => {
         )}
       </div>
 
-      {/* Admin Login Form (only shows when clicked) */}
       {showAdminForm && (
         <div style={styles.adminForm}>
           <input
@@ -107,17 +106,28 @@ const Navbar = () => {
   );
 };
 
+
+
 const styles = {
   nav: {
+    position: "fixed", 
+    top: 0,
+    left: 0,
+    width: "100%",      
+    zIndex: 1000,
+    height: "60px", 
     background: "var(--card-bg)",
     color: "var(--text)",
     display: "flex",
+    flexWrap : "wrap",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "10px 20px",
+    padding: "10 20px", 
+    boxShadow: "var(--shadow)",
   },
-  logo: { fontSize: "1.5rem", fontWeight: "bold" },
-  rightSection: { display: "flex", alignItems: "center", gap: "10px" },
+
+  logo: { fontSize: "1.2rem", fontWeight: "bold" },
+  rightSection: { display: "flex", alignItems: "center", gap: "5px" },
   themeButton: {
     background: "transparent",
     border: "1px solid var(--text)",
@@ -138,14 +148,15 @@ const styles = {
   },
   adminForm: {
     position: "absolute",
-    top: "60px",
+    top: "70px",
     right: "20px",
-    background: "#222",
+    background: "var(--card-bg)",
     padding: "10px",
     borderRadius: "8px",
     display: "flex",
     flexDirection: "column",
     gap: "8px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.15)"
   },
 };
 
