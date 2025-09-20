@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import AdminDashboard from "./pages/AdminDashboard";
 import { ThemeProvider } from "./context/ThemeContext";
 import Login from "./pages/Login";
+import Register from "./pages/Register"; 
 import PrivateAdminRoute from "./routes/PrivateAdminRoute";
 import { useAuth } from "./context/AuthContext";
 
@@ -18,30 +19,35 @@ export default function App() {
       <Router>
         <Navbar />
         <Routes>
+          
           <Route
             path="/"
             element={
-             <div style={{ paddingTop: "40px" }}>
-            {isAdmin ? <AdminDashboard /> : <Home />}
-            </div>
-            }
-          />
-
-
-          <Route path="/login" element={<Login />} />
-
-
-          <Route
-            path="/admin"
-            element={
-               <div style={{ paddingTop: "50px" }}>
-              <PrivateAdminRoute>
-                <AdminDashboard />
-              </PrivateAdminRoute>
+              <div style={{ paddingTop: "40px" }}>
+                {isAdmin ? <AdminDashboard /> : <Home />}
               </div>
             }
           />
 
+         
+          <Route path="/login" element={<Login />} />
+
+          
+          <Route path="/register" element={<Register />} />
+
+          
+          <Route
+            path="/admin"
+            element={
+              <div style={{ paddingTop: "50px" }}>
+                <PrivateAdminRoute>
+                  <AdminDashboard />
+                </PrivateAdminRoute>
+              </div>
+            }
+          />
+
+          
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>
