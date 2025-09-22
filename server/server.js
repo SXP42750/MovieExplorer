@@ -4,13 +4,14 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
+const app = express();
+app.use(cors());
+app.use(express.json());
+
 const bookingsRoute = require("./routes/bookings"); 
 const authRoutes = require("./routes/auth"); 
 const auth = require("./middleware/auth"); 
 
-const app = express();
-app.use(cors());
-app.use(express.json());
 
 
 const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/movieapp";

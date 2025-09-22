@@ -1,7 +1,8 @@
-:root {
+ :root {
   --bg: #ffffff;
   --text: #111827;
   --card-bg: #ffffff;
+    --card-text: #111111;
   --input-bg: #ffffff;
   --input-text: #111827;
   --input-border: #d1d5db;
@@ -16,7 +17,8 @@ html.dark {
   --bg: #0b1220;
   --text: #e6eef8;
   --nav-bg: #0f1724;
-  --card-bg: #0b1220;
+  --card-bg: #1e1e1e;
+  --card-text: #ffffff;
   --muted: #94a3b8;
   --primary: #3b82f6;
   --button-bg: #3b82f6;
@@ -183,7 +185,12 @@ body {
 }
 
 .rating-number {
+  font-size: 0.9rem;
   font-weight: 600;
-  font-size: 15px;
-  color: var(--text);
-}
+  color: #ffd700; 
+  display: flex;
+  align-items: center;
+  gap: 4px;
+} 
+
+

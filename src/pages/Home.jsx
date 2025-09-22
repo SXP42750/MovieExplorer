@@ -1,15 +1,17 @@
 import React from "react";
 import MovieList from "../components/MovieList";
-// import { useAuth } from "../context/AuthContext";
 
-export default function Home() {
-  // const { user } = useAuth();
-
+export default function Home({ query, genreId, language, rating, sortBy }) {
   return (
-    <div style={{ padding: "50px 20px " }}>
-
-      <MovieList />
+    <div className="home-container">
+      <MovieList
+        query={query}
+        genreId={genreId}
+        language={language}
+        rating={rating}
+        sortBy={sortBy}
+      />
     </div>
-
   );
 }
+

@@ -1,324 +1,140 @@
-// import React, { useState } from "react";
-// import { useAuth } from "../context/AuthContext";
-// import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, signOut } from "firebase/auth";
-// import { useTheme } from "../context/ThemeContext";
-
-// const Navbar = () => {
-//   const { user, isAdmin } = useAuth();
-//   const { theme, toggleTheme } = useTheme(); 
-//   const auth = getAuth();
-//   const provider = new GoogleAuthProvider();
-
-//   const [showAdminForm, setShowAdminForm] = useState(false);
-//   const [adminEmail, setAdminEmail] = useState("");
-//   const [adminPassword, setAdminPassword] = useState("");
-
-
-//   const handleLogin = async () => {
-//     try {
-//       await signInWithPopup(auth, provider);
-//       console.log("User logged in with Google");
-//     } catch (error) {
-//       console.error("User login failed:", error);
-//     }
-//   };
-
-
-//   const handleAdminLogin = async () => {
-//     try {
-//       await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
-//       console.log("Admin logged in successfully");
-//       setShowAdminForm(false);
-//     } catch (error) {
-//       console.error("Admin login failed:", error.code, error.message);
-//       alert(error.message);
-//     }
-//   };
-
-
-//   const handleLogout = async () => {
-//     try {
-//       await signOut(auth);
-//       console.log("Logged out successfully");
-//     } catch (error) {
-//       console.error("Logout failed:", error);
-//     }
-//   };
-
-//   return (
-//     <nav style={styles.nav}> 
-//       <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-//   <img 
-//     src="/logo.jpg" 
-//     alt="Movie Explorer Logo" 
-//     style={{ height: "35px", objectFit: "contain" }} 
-//   />
-//   <h1 style={styles.logo}>Movie Explorer</h1>
-// </div>
-
-//       <div style={styles.rightSection}>
-      
-//         <button style={styles.themeButton} onClick={toggleTheme}>
-//           {theme === "light" ? "🌙 Dark" : "☀️ Light"}
-//         </button>
-
-//         {user ? (
-//           <div style={styles.userSection}>
-//             <span style={styles.username}>
-//               {isAdmin ? "👑 Admin" : user.displayName || user.email}
-//             </span>
-//             <button style={styles.button} onClick={handleLogout}>
-//               Logout
-//             </button>
-//           </div>
-//         ) : (
-//           <>
-//             <button style={styles.button} onClick={handleLogin}>
-//               Login with Google
-//             </button>
-//             <button style={styles.button} onClick={() => setShowAdminForm(!showAdminForm)}>
-//               Admin Login
-//             </button>
-//           </>
-//         )}
-//       </div>
-
-//       {showAdminForm && (
-//         <div style={styles.adminForm}>
-//           <input
-//             type="email"
-//             placeholder="Admin Email"
-//             value={adminEmail}
-//             onChange={(e) => setAdminEmail(e.target.value)}
-//           />
-//           <input
-//             type="password"
-//             placeholder="Password"
-//             value={adminPassword}
-//             onChange={(e) => setAdminPassword(e.target.value)}
-//           />
-//           <button style={styles.button} onClick={handleAdminLogin}>
-//             Login as Admin
-//           </button>
-//         </div>
-//       )}
-//     </nav>
-//   );
-// };
-
-
-
-// const styles = {
-//   nav: {
-//     position: "fixed", 
-//     top: 0,
-//     left: 0,
-//     width: "100%",      
-//     zIndex: 1000,
-//     height: "60px", 
-//     background: "var(--card-bg)",
-//     color: "var(--text)",
-//     display: "flex",
-//     flexWrap : "wrap",
-//     justifyContent: "space-between",
-//     alignItems: "center",
-//     padding: "10 20px", 
-//     boxShadow: "var(--shadow)",
-//   },
-
-//   logo: { fontSize: "1.2rem", fontWeight: "bold" },
-//   rightSection: { display: "flex", alignItems: "center", gap: "5px" },
-//   themeButton: {
-//     background: "transparent",
-//     border: "1px solid var(--text)",
-//     color: "var(--text)",
-//     padding: "6px 10px",
-//     borderRadius: "5px",
-//     cursor: "pointer",
-//   },
-//   userSection: { display: "flex", alignItems: "center", gap: "10px" },
-//   username: { fontSize: "1rem" },
-//   button: {
-//     background: "#ff4757",
-//     color: "#fff",
-//     border: "none",
-//     padding: "8px 12px",
-//     borderRadius: "5px",
-//     cursor: "pointer",
-//   },
-//   adminForm: {
-//     position: "absolute",
-//     top: "70px",
-//     right: "20px",
-//     background: "var(--card-bg)",
-//     padding: "10px",
-//     borderRadius: "8px",
-//     display: "flex",
-//     flexDirection: "column",
-//     gap: "8px",
-//     boxShadow: "0 4px 12px rgba(0,0,0,0.15)"
-//   },
-// };
-
-// export default Navbar;
-
-// src/components/Navbar.jsx
-import React, { useState} from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-// import { AppContext } from "../AppContext";        // earlier canvas: AppContext with saveAuth/logout
-import { useTheme } from "../context/ThemeContext"; // your theme context
-import { useAuth } from "../context/AuthContext"; // <-- use your AuthContext
-const Navbar = () => {
-  // expects AppContext: { user, saveAuth, logout }
+import { useTheme } from "../context/ThemeContext";
+import { useAuth } from "../context/AuthContext";
+import { getGenres, LANGUAGES } from "../api/tmdb";
+
+const Navbar = ({ onFilterChange }) => {
   const { user, saveAuth, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
+  
+  const [query, setQuery] = useState("");
+  const [genreId, setGenreId] = useState("");
+  const [language, setLanguage] = useState("");
+  const [rating, setRating] = useState("");
+  const [sortBy, setSortBy] = useState("");
+
+  const [genres, setGenres] = useState([]);
+
+  
   const [showAdminForm, setShowAdminForm] = useState(false);
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // POST to your backend login endpoint (expects { token, user } response)
+  useEffect(() => {
+    getGenres().then(setGenres).catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    if (onFilterChange) {
+      onFilterChange({ query, genreId, language, rating, sortBy });
+    }
+  }, [query, genreId, language, rating, sortBy, onFilterChange]);
+
+  const handleResetFilters = () => {
+    setQuery("");
+    setGenreId("");
+    setLanguage("");
+    setRating("");
+    setSortBy("");
+  };
+
   const handleAdminLogin = async () => {
     if (!adminEmail || !adminPassword) return alert("Enter email and password");
     try {
       setLoading(true);
-      const res = await axios.post("/api/auth/login", {
-        email: adminEmail,
-        password: adminPassword,
-      });
-      // backend should send: { token, user: { id, name, email, isAdmin } }
+      const res = await axios.post("/api/auth/login", { email: adminEmail, password: adminPassword });
       const { token, user: userObj } = res.data;
-      if (!token) throw new Error("No token returned from server");
-      // saveAuth should set localStorage and context state
       saveAuth(token, userObj);
       setShowAdminForm(false);
       setAdminEmail("");
       setAdminPassword("");
-      // optionally set axios default header for subsequent calls:
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     } catch (err) {
-      console.error("Admin login failed:", err?.response?.data || err.message);
-      alert(err?.response?.data?.message || err.message || "Login failed");
+      console.error(err);
+      alert(err?.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleLogout = async () => {
-    // clear auth on frontend; if you have server-side logout, call it here
-    // also remove axios auth header
+  const handleLogout = () => {
     delete axios.defaults.headers.common["Authorization"];
     logout();
   };
 
   return (
     <nav style={styles.nav}>
-      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-        <img
-          src="/logo.jpg"
-          alt="Movie Explorer Logo"
-          style={{ height: "35px", objectFit: "contain" }}
+
+      
+      <div style={styles.left}>
+        <div style={styles.brand}>
+          <img src="/logo.jpg" alt="Movie Explorer Logo" style={styles.logoImg} />
+          <h1 style={styles.logo}>Movie Explorer</h1>
+        </div>
+      </div>
+
+      
+      <div style={styles.filterSection}>
+        <input
+          type="text"
+          placeholder="Search movies..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          style={styles.input}
         />
-        <h1 style={styles.logo}>Movie Explorer</h1>
+
+        <select value={genreId} onChange={(e) => setGenreId(e.target.value)} style={styles.select}>
+          <option value="">All Genres</option>
+          {genres.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
+        </select>
+
+        <select value={language} onChange={(e) => setLanguage(e.target.value)} style={styles.select}>
+          <option value="">All Languages</option>
+          {LANGUAGES.map((l) => <option key={l.code} value={l.code}>{l.name}</option>)}
+        </select>
+
+        <select value={rating} onChange={(e) => setRating(e.target.value)} style={styles.select}>
+          <option value="">Rating</option>
+          {[...Array(10).keys()].map((i) => <option key={i + 1} value={i + 1}>{i + 1}+</option>)}
+        </select>
+
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={styles.select}>
+          <option value="">Sort By</option>
+          <option value="popularity_desc">Popularity</option>
+          <option value="release_date_desc">Release Date</option>
+          <option value="vote_average_desc">Rating</option>
+          <option value="title_asc">Title A → Z</option>
+          <option value="title_desc">Title Z → A</option>
+        </select>
+
+        <button style={styles.resetBtn} onClick={handleResetFilters}>Reset</button>
       </div>
 
-      <div style={styles.centerSection}>
-        {/* If using react-router, replace <a> with <Link to="/"> */}
-        <a href="/" style={styles.link}>
-          Home
-        </a>
-        <span style={styles.sep}>|</span>
-        <a href="/movies" style={styles.link}>
-          Movies
-        </a>
-        <span style={styles.sep}>|</span>
-
-        {/* show admin link when logged-in user is admin */}
-        {user?.isAdmin && (
-          <>
-            <a href="/admin" style={styles.adminLink}>
-              👑 Admin Dashboard
-            </a>
-            <span style={styles.sep}>|</span>
-          </>
-        )}
-      </div>
-
+      {/* Right: actions */}
       <div style={styles.rightSection}>
-        <button style={styles.themeButton} onClick={toggleTheme}>
+        <a href="/movies" style={styles.link}>Movies</a>
+
+        {user?.isAdmin && <>
+          <span style={styles.sep}>|</span>
+          <a href="/admin" style={styles.adminLink}>👑 Admin</a>
+        </>}
+
+        <button style={styles.themeButton} onClick={toggleTheme} aria-label="Toggle theme">
           {theme === "light" ? "🌙 Dark" : "☀️ Light"}
         </button>
 
         {user ? (
           <div style={styles.userSection}>
-            <span style={styles.username}>
-              {user.isAdmin ? "👑 Admin" : user.name || user.email}
-            </span>
-            <button style={styles.button} onClick={handleLogout}>
-              Logout
-            </button>
+            <span style={styles.userName}>{user.isAdmin ? "👑 Admin" : user.name || user.email}</span>
+            <button style={styles.button} onClick={handleLogout}>Logout</button>
           </div>
         ) : (
-          <>
-            {/* You can add a regular user login modal here if you want */}
-            <button
-              style={styles.button}
-              onClick={() => {
-                
-                window.location.href = "/login";
-              }}
-            >
-              Login
-            </button>
-
-            {/* <button
-              style={styles.button}
-              onClick={() => setShowAdminForm(!showAdminForm)}
-            >
-              Admin Login
-            </button> */}
-          </>
+          <button style={styles.button} onClick={() => (window.location.href = "/login")}>Login</button>
         )}
       </div>
-
-      {showAdminForm && (
-        <div style={styles.adminForm}>
-          <input
-            type="email"
-            placeholder="Admin Email"
-            value={adminEmail}
-            onChange={(e) => setAdminEmail(e.target.value)}
-            style={styles.input}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={adminPassword}
-            onChange={(e) => setAdminPassword(e.target.value)}
-            style={styles.input}
-          />
-          <div style={{ display: "flex", gap: 8 }}>
-            <button
-              style={styles.button}
-              onClick={handleAdminLogin}
-              disabled={loading}
-            >
-              {loading ? "Logging in..." : "Login as Admin"}
-            </button>
-            <button
-              style={{ ...styles.button, background: "#6c757d" }}
-              onClick={() => {
-                setShowAdminForm(false);
-                setAdminEmail("");
-                setAdminPassword("");
-              }}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
     </nav>
   );
 };
@@ -329,85 +145,113 @@ const styles = {
     top: 0,
     left: 0,
     width: "100%",
-    zIndex: 1000,
-    height: "60px",
+    height: "var(--navbar-height)",
     background: "var(--card-bg)",
     color: "var(--text)",
-    display: "flex",
+    display: "grid",
+    gridTemplateColumns: "auto 1fr auto", 
     alignItems: "center",
-    justifyContent: "space-between",
-    padding: "8px 0px",
-    boxShadow: "var(--shadow)",
     gap: "12px",
+    padding: "0 20px",
+    boxShadow: "0 2px 12px rgba(0,0,0,0.12)",
+    zIndex: 1000,
+    boxSizing: "border-box",
   },
 
-  logo: { fontSize: "1.2rem", fontWeight: "bold", margin: 0 },
-
-  centerSection: {
+  
+  left: {
     display: "flex",
     alignItems: "center",
     gap: "8px",
-    flex: 1,
+  },
+  brand: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+  },
+  logoImg: {
+    height: "35px",
+    width: "auto",
+    objectFit: "cover",
+    borderRadius: "6px"
+  },
+  logo: { fontSize: "1.2rem", fontWeight: 700, margin: 0 },
+
+  
+  filterSection: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
     justifyContent: "center",
+    flexWrap: "nowrap",     
+    overflowX: "auto",
+    padding: "6px 4px",
+    minWidth: 0,           
   },
 
-  rightSection: { display: "flex", alignItems: "center", gap: "8px" },
-
-  themeButton: {
-    background: "transparent",
-    border: "1px solid var(--text)",
-    color: "var(--text)",
+  
+  input: {
     padding: "6px 10px",
-    borderRadius: "5px",
-    cursor: "pointer",
+    borderRadius: "8px",
+    border: "1px solid #ccc",
+    minWidth: "180px",
+    maxWidth: "420px",
+    flex: "0 0 auto",
+    background: "var(--card-bg)",
+    color: "var(--text)"
   },
-
-  userSection: { display: "flex", alignItems: "center", gap: "10px" },
-
-  username: { fontSize: "1rem" },
-
-  button: {
+  select: {
+    padding: "6px 10px",
+    borderRadius: "8px",
+    border: "1px solid #ccc",
+    minWidth: "120px",
+    flex: "0 0 auto",
+    background: "var(--card-bg)",
+    color: "var(--text)"
+  },
+  resetBtn: {
+    padding: "6px 12px",
+    borderRadius: "8px",
+    cursor: "pointer",
     background: "#ff4757",
     color: "#fff",
     border: "none",
-    padding: "8px 12px",
-    borderRadius: "5px",
-    cursor: "pointer",
+    flex: "0 0 auto"
   },
 
-  adminForm: {
-    position: "absolute",
-    top: "70px",
-    right: "20px",
-    background: "var(--card-bg)",
-    padding: "12px",
-    borderRadius: "8px",
+  
+  rightSection: {
     display: "flex",
-    flexDirection: "column",
-    gap: "8px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-    minWidth: "240px",
+    alignItems: "center",
+    gap: "12px",
+    justifySelf: "end",   
+    flexWrap: "nowrap",
+    minWidth: 0,
+    paddingLeft: "8px"
   },
-
-  input: {
-    padding: "8px",
-    borderRadius: "6px",
-    border: "1px solid #ddd",
-    outline: "none",
+  themeButton: {
+    padding: "6px 12px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    background: "transparent",
+    border: "1px solid rgba(0,0,0,0.06)",
+    color: "var(--text)"
   },
-
-  adminLink: {
-    textDecoration: "none",
-    fontWeight: "600",
+  userSection: { display: "flex", alignItems: "center", gap: "8px" },
+  button: {
+    padding: "6px 12px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    background: "#ff4757",
+    color: "#fff",
+    border: "none"
   },
+  userName: { maxWidth: "140px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "inline-block" },
 
-  link: {
-    textDecoration: "none",
-    color: "var(--text)",
-    fontWeight: 500,
-  },
-
+  link: { textDecoration: "none", color: "var(--text)", fontWeight: 500 },
   sep: { margin: "0 6px", color: "var(--muted)" },
+  adminLink: { fontWeight: 600, textDecoration: "none", color: "#3b82f6" },
 };
 
 export default Navbar;
+
